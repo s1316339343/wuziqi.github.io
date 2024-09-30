@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>趣味五子棋</title>
+    <style>
+        canvas{
+            display: block;
+            background-color: #FFFACD;
+            margin: 0 auto;
+ 
+        }
+    </style>
+</head>
+<body>
+    <script>
+        const canvas=document.createElement('canvas');
+        // 宽16*50高16*50
+        canvas.width=16*50;
+        canvas.height=16*50;
+        document.body.append(canvas);
+        const context=canvas.getContext('2d');
+        let game=true;
+        for(let i=1;i<16;i++){
+            context.moveTo(50*i,50);
+            context.lineTo(50*i,750);
+            context.stroke();
+            context.moveTo(50,50*i);
+            context.lineTo(750,50*i);
+            context.stroke();
+        }
+        let array=[];
+        for(let j=0;j<15;j++){
+            array[j]=[];
+            for(let t=0;t<15;t++){
+                array[j][t]=0;
+            }     
+        }
+        let ifblack=true;
+        canvas.addEventListener('click',e=>{
+            if(game===false){
+                location.reload();
+            }
+            let {offsetX:x,offsetY:y}=e;
+            if(x>=25&&x<=775&&y>=25&&y<=775){
+            // console.log(Math.round(x/50)*50);
+            // console.log(Math.round(y/50)*50);
+            // 点击落子
+            // 坐标X,Y
+            X=Math.round(x/50)-1;
+            Y=Math.round(y/50)-1;
+            if(array[X][Y]===0){
+            //制作黑白棋子
+            x=ifblack?Math.round(x/50)*50-10:Math.round(x/50)*50+10;
+            y=ifblack?Math.round(y/50)*50-10:Math.round(y/50)*50+10;
+            const gradient=context.createRadialGradient(x,y,0,x,y,13);
+            gradient.addColorStop(0,ifblack?'#ccc':'#779');
+            gradient.addColorStop(1,ifblack?'#000':'#bbb');
+            context.fillStyle=gradient;
+            context.beginPath();
+            context.arc(Math.round(x/50)*50,Math.round(y/50)*50,25,0,2*Math.PI);
+            context.fill();
+            context.closePath();
+            //落子无悔，计入数组
+            array[X][Y]=ifblack?-1:1;
+            ifblack=!ifblack;
+            let sum=1;
+            let sum1=1;
+            let sum2=1;
+            let sum3=1;
+            // 判断输赢四种情况：竖（sum）、横(sum1)、撇(sum2)、捺(sum3)
+            shu(X,Y);
+           function shu(X,Y){
+            let times=0;
+            let up=1;
+            let down=1;
+            let right=1;
+            let left=1;
+            let rdown=1;
+            let lup=1;
+            let ldown=1;
+            let rup=1;
+        //竖   
+            while(times<10000){
+                times++;
+                if(sum===5){
+                    alert('游戏结束！！！');
+                    game=!game;
+                    if(array[X][Y]===-1){
+                        alert('黑方胜！');
+ 
+                    }
+                    else{
+                        alert('白方胜！');
+ 
+                    }
+                    break;
+                }
+                if(array[X][Y+up]&&array[X][Y]===array[X][Y+up]){
+                    up++;
+                    sum++;
+                    continue;
+                }
+                if(array[X][Y-down]&&array[X][Y]===array[X][Y-down]){
+                    down++;
+                    sum++;
+                    continue;
+                }
+                if(sum<5){
+                    break;
+                }
+            }
+        //横      
+            while(times<10000){
+                times++;
+                if(sum1===5){
+                    alert('游戏结束！！！');
+                    game=!game;
+                    if(array[X][Y]===-1){
+                        alert('黑方胜！');
+                    }
+                    else{
+                        alert('白方胜！');
+                    }
+                    break;
+                }
+                if(array[X+right][Y]&&array[X][Y]===array[X+right][Y]){
+                    right++;
+                    sum1++;
+                    continue;
+                }
+                if(array[X-left][Y]&&array[X][Y]===array[X-left][Y]){
+                    left++;
+                    sum1++;
+                    continue;
+                }
+                if(sum1<5){
+                    break;
+                }
+            }
+        //撇
+        while(times<10000){
+                times++;
+                if(sum2===5){
+                    alert('游戏结束！！！');
+                    game=!game;
+                    if(array[X][Y]===-1){
+                        alert('黑方胜！');
+                    }
+                    else{
+                        alert('白方胜！');
+                    }
+                    break;
+                }
+                if(array[X+rdown][Y-rdown]&&array[X][Y]===array[X+rdown][Y-rdown]){
+                    rdown++;
+                    sum2++;
+                    continue;
+                }
+                if(array[X-lup][Y+lup]&&array[X][Y]===array[X-lup][Y+lup]){
+                    lup++;
+                    sum2++;
+                    continue;
+                }
+                if(sum2<5){
+                    break;
+                }
+            }
+        //捺
+        while(times<10000){
+                times++;
+                if(sum3===5){
+                    alert('游戏结束！！！');
+                    game=!game;
+                    if(array[X][Y]===-1){
+                        alert('黑方胜！');
+                    }
+                    else{
+                        alert('白方胜！');
+                    }
+                    break;
+                }
+                if(array[X+rup][Y+rup]&&array[X][Y]===array[X+rup][Y+rup]){
+                    rup++;
+                    sum3++;
+                    continue;
+                }
+                if(array[X-ldown][Y-ldown]&&array[X][Y]===array[X-ldown][Y-ldown]){
+                    ldown++;
+                    sum3++;
+                    continue;
+                }
+                if(sum3<5){
+                    
+                    break;
+                }
+            }
+           }
+            // console.log(array);
+            }
+            }
+        })
+    </script>
+</body>
+</html>
